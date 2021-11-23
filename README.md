@@ -12,7 +12,7 @@ create-react-app + antd
 
 ## 更新日志
 ### version 1.1.0
-+ NSFW模块
++ NSFW
 
 ### version 1.0.0
 + 通过pid获取信息
