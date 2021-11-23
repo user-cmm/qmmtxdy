@@ -1,10 +1,11 @@
 import * as nsfwjs from 'nsfwjs';
 import { useEffect, useState } from 'react';
-import { Card,Form,Modal } from 'antd';
+import { Breadcrumb, Card,Form,Modal, Space } from 'antd';
 import Dragger from 'antd/lib/upload/Dragger';
 import {InboxOutlined} from '@ant-design/icons'
 import getType from '../../util/getType';
 import { UploadChangeParam } from 'antd/lib/upload';
+import { Link } from 'react-router-dom';
 
 function Nsfw () {
   let [state, changeState] = useState<String>('0');
@@ -38,6 +39,16 @@ function Nsfw () {
     init()
   },[])
   return (<>
+    <Card>
+      <Space>
+        <Breadcrumb>
+          <Breadcrumb.Item>
+            <Link to="/">Home</Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>nsfw</Breadcrumb.Item>
+        </Breadcrumb>
+      </Space>
+    </Card>
     <Card>
       {state === '0'&&(<span>模块加载中……</span>)}
       {state === '1'&&(<Form>

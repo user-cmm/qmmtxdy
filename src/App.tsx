@@ -10,6 +10,7 @@ import './App.css';
 import {Typography} from 'antd'
 import { Link } from 'react-router-dom';
 import Nsfw from './page/NSFW/NSFW';
+import Login from './page/Login/login';
 const {Text} = Typography
 function App() {
   const logo = "http://q1.qlogo.cn/g?b=qq&nk=1205906375&s=640"
@@ -23,6 +24,11 @@ function App() {
             </Link>
           </Col>
           <Col flex={1}><Text style={{color:"white"}}>祈妈妈天下第一</Text></Col>
+          <Col flex="40px">
+            <Link to="/login">
+              登录
+            </Link>
+          </Col>
         </Row>
       </Header>
       <Content>
@@ -31,6 +37,7 @@ function App() {
           <Route path="/search" element={<Search />}></Route>
           <Route path="/search/:pid" element={<Search />}></Route>
           <Route path="/nsfw" element={<Nsfw/>}></Route>
+          <Route path="/login" element={<Login/>}></Route>
           <Route path="*" element={
             <Result
               status="404"
