@@ -1,29 +1,46 @@
-import { Breadcrumb, Button, Card, Space,Form, Input, Descriptions, Tooltip } from 'antd'
+import { Breadcrumb, Button, Card, Space,Form, Input, Descriptions, Tooltip, message } from 'antd'
 import axios from '../../util/axios'
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link,useParams } from 'react-router-dom'
 import moment from 'moment'
 import {Res,Body} from '../../Api/pixiv/details'
 interface IForm {
   pid:String
 }
-
-export default function SearchByPid () {
+type iParams = "pid"//|"id"
+export default function SearchByPid() {
+  let nav = useParams<iParams>()
   let [data,changeData] = useState<Body|undefined>(undefined)
+  const [form] = Form.useForm<IForm>()
   function onFinish(value:IForm) {
+    console.log(value)
     axios.get<Res>("/touch/ajax/illust/details",{
       params:{
         illust_id: value.pid,
         lang: "zh"
       }
     }).then(req=>{
+      console.log(req)
       if(req.data.error){
         changeData(undefined)
+        throw Error(req.data.message)
       }else{
         changeData(req.data.body)
       }
+    }).catch((err:Error)=>{
+      console.log(err)
+      
+      message.error(err.message||'pid可能不存在');
+      return 
     })
   }
+  useEffect(()=>{
+    if(!nav.pid) return
+    form.setFieldsValue({
+      pid:nav.pid
+    })
+    form.submit()
+  },[nav.pid,form])
   return (<>
     <Card>
       <Space>
@@ -37,6 +54,7 @@ export default function SearchByPid () {
     </Card>
     <Card>
       <Form<IForm>
+        form={form}
         name="search"
         labelCol={{span:4}}
         wrapperCol={{span:16}}
@@ -81,8 +99,8 @@ export default function SearchByPid () {
           <Descriptions.Item label="原图尺寸">{data.illust_details.width}*{data.illust_details.height}</Descriptions.Item>
           <Descriptions.Item label="标签">
             <span>
-            {data.illust_details.display_tags.map(v=>(
-              <Tooltip title={
+            {data.illust_details.display_tags.map((v,i)=>(
+              <Tooltip key={i} title={
                 <p>
                   是否可删除：{v.is_deletable?'是':'否'}<br />
                   是否锁定：{v.is_locked?'是':'否'}<br />

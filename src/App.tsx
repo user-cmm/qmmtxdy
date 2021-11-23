@@ -1,4 +1,4 @@
-import { Col, Layout, Row } from 'antd';
+import { Button, Col, Layout, Result, Row } from 'antd';
 import { Content, Header } from 'antd/lib/layout/layout';
 import React from 'react';
 import { Route, Routes } from 'react-router';
@@ -9,6 +9,7 @@ import './App.css';
 // import Title from 'antd/lib/skeleton/Title';
 import {Typography} from 'antd'
 import { Link } from 'react-router-dom';
+import Nsfw from './page/NSFW/NSFW';
 const {Text} = Typography
 function App() {
   const logo = "http://q1.qlogo.cn/g?b=qq&nk=1205906375&s=640"
@@ -28,6 +29,17 @@ function App() {
         <Routes>
           <Route path="/" element={<Index />}></Route>
           <Route path="/search" element={<Search />}></Route>
+          <Route path="/search/:pid" element={<Search />}></Route>
+          <Route path="/nsfw" element={<Nsfw/>}></Route>
+          <Route path="*" element={
+            <Result
+              status="404"
+              title="404"
+              subTitle="Sorry, the page you visited does not exist."
+              extra={<Button type="primary"><Link to="/">Back Home</Link></Button>}
+            />
+          }>
+          </Route>
         </Routes>
       </Content>
       {/* <Footer style={{textAlign:"center"}}>

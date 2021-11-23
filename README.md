@@ -11,5 +11,8 @@ create-react-app + antd
 + 图片链接导出
 
 ## 更新日志
+### version 1.1.0
++ NSFW模块
+
 ### version 1.0.0
 + 通过pid获取信息

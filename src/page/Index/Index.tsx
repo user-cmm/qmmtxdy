@@ -18,8 +18,11 @@ function Index() {
     </Card>
     <Card>
       <Space>
-        <Link to="/Search">
+        <Link to="/search">
           <Button>获取信息</Button>
+        </Link>
+        <Link to="/nsfw">
+          <Button>图片hentai评定</Button>
         </Link>
       </Space>
     </Card>
