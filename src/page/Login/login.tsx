@@ -1,5 +1,7 @@
 import { Breadcrumb, Card, Space,Form, Input, Checkbox, Button } from "antd";
 import { UserLogin } from "../../Api/user/login";
+import { useAppDispatch } from "../../app/hooks";
+import { onLogin } from "../../features/user/user";
 import defaultAxios from "../../util/axios";
 
 interface iForm {
@@ -8,12 +10,17 @@ interface iForm {
   password:string
 }
 export default function Login () {
+  const dis = useAppDispatch()
   const onFinish = (values: iForm) => {
     defaultAxios.post<UserLogin>("/api/user/login",{
       ...values
     }).then(req=>{
       if(req.data.success){
-        // TODO: 摸了
+        dis(onLogin({
+          isLogin:true,
+          avatar:"http://q1.qlogo.cn/g?b=qq&nk=1148780375&s=640",
+          token:"123"
+        }))
       }
     })
   };

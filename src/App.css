@@ -25,6 +25,11 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
+.App-avatar{
+  width: 50px;
+  pointer-events: none;
+  border-radius: 8px;
+}
 
 .App-link {
   color: #61dafb;

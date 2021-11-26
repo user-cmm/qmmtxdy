@@ -1,7 +1,7 @@
 import { Button, Col, Layout, Result, Row } from 'antd';
 import { Content, Header } from 'antd/lib/layout/layout';
 import React from 'react';
-import { Route, Routes } from 'react-router';
+import { Navigate, Route, Routes } from 'react-router';
 // import logo from './logo.svg';
 import Index from './page/Index/Index'
 import Search from './page/SearchByPid/SearchByPid'
@@ -11,8 +11,12 @@ import {Typography} from 'antd'
 import { Link } from 'react-router-dom';
 import Nsfw from './page/NSFW/NSFW';
 import Login from './page/Login/login';
+import { useAppDispatch, useAppSelector } from './app/hooks';
+import { logout } from './features/user/user';
 const {Text} = Typography
 function App() {
+  let info = useAppSelector((state)=>state.userSlice)
+  let dis = useAppDispatch()
   const logo = "http://q1.qlogo.cn/g?b=qq&nk=1205906375&s=640"
   return (
     <Layout>
@@ -24,11 +28,24 @@ function App() {
             </Link>
           </Col>
           <Col flex={1}><Text style={{color:"white"}}>祈妈妈天下第一</Text></Col>
-          <Col flex="40px">
-            <Link to="/login">
+          {info.isLogin?(
+            <>
+              <Col flex="60px">
+              <Link to="/login">
+                <img src={info.avatar} className="App-avatar" alt="avatar"></img>
+              </Link>
+              </Col>
+              <Col flex="40px">
+                <Button type="link" onClick={()=>dis(logout())} >登出</Button>
+              </Col>
+            </>
+          ):(
+            <Col flex="40px">
+              <Link to="/login">
               登录
-            </Link>
-          </Col>
+              </Link>
+            </Col>
+          )}
         </Row>
       </Header>
       <Content>
@@ -37,7 +54,9 @@ function App() {
           <Route path="/search" element={<Search />}></Route>
           <Route path="/search/:pid" element={<Search />}></Route>
           <Route path="/nsfw" element={<Nsfw/>}></Route>
-          <Route path="/login" element={<Login/>}></Route>
+          <Route path="/login" element={info.isLogin?(
+            <Navigate to="/"></Navigate>
+          ):<Login/>}></Route>
           <Route path="*" element={
             <Result
               status="404"

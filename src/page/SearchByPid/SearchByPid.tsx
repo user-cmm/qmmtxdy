@@ -1,14 +1,19 @@
-import { Breadcrumb, Button, Card, Space,Form, Input, Descriptions, Tooltip, message } from 'antd'
+import { Breadcrumb, Button, Card, Space,Form, Input, Descriptions, Tooltip, message,Image } from 'antd'
 import axios from '../../util/axios'
 import { useEffect, useState } from 'react'
 import { Link,useParams } from 'react-router-dom'
 import moment from 'moment'
 import {Res,Body} from '../../Api/pixiv/details'
+import { useAppSelector } from '../../app/hooks'
 interface IForm {
   pid:String
 }
+function getPixivImageSrc(img:string) {
+  return img.replace('https://i.pximg.net/img-original','https://www.ruok.buzz/img-original')
+}
 type iParams = "pid"//|"id"
 export default function SearchByPid() {
+  let islogin = useAppSelector((state)=>state.userSlice.isLogin)
   let nav = useParams<iParams>()
   let [data,changeData] = useState<Body|undefined>(undefined)
   const [form] = Form.useForm<IForm>()
@@ -77,6 +82,7 @@ export default function SearchByPid() {
           </Button>
         </Form.Item>
       </Form>
+      {data&&islogin&&(<Image width={200} src={getPixivImageSrc(data.illust_details.url_big)}  />)}
       {data&&(
         <Descriptions title="图片信息" labelStyle={{fontWeight:"bold"}}>
           <Descriptions.Item label="作者ID">{data.author_details.user_id}</Descriptions.Item>
@@ -112,7 +118,7 @@ export default function SearchByPid() {
             </span>
           </Descriptions.Item>
           <Descriptions.Item label="上传时间">{moment(data.illust_details.upload_timestamp*1000).format("YYYY-MM-DD HH:mm")}</Descriptions.Item>
-          <Descriptions.Item label="原图地址"><a target="_blank" rel="noreferrer" href={data.illust_details.url_big.replace('https://i.pximg.net/img-original','https://www.ruok.buzz/img-original')}>{data.illust_details.url_big}</a></Descriptions.Item>
+          <Descriptions.Item label="原图地址"><a target="_blank" rel="noreferrer" href={getPixivImageSrc(data.illust_details.url_big)}>{data.illust_details.url_big}</a></Descriptions.Item>
         </Descriptions>
       )}
     </Card>
