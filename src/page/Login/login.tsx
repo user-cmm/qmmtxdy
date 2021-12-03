@@ -1,4 +1,5 @@
 import { Breadcrumb, Card, Space,Form, Input, Checkbox, Button } from "antd";
+import { Link } from "react-router-dom";
 import { UserLogin } from "../../Api/user/login";
 import { useAppDispatch } from "../../app/hooks";
 import { onLogin } from "../../features/user/user";
@@ -12,14 +13,14 @@ interface iForm {
 export default function Login () {
   const dis = useAppDispatch()
   const onFinish = (values: iForm) => {
-    defaultAxios.post<UserLogin>("/api/user/login",{
+    defaultAxios.post<UserLogin>("/api/qmm/user/login",{
       ...values
     }).then(req=>{
       if(req.data.success){
         dis(onLogin({
           isLogin:true,
-          avatar:"http://q1.qlogo.cn/g?b=qq&nk=1148780375&s=640",
-          token:"123"
+          avatar:`http://q1.qlogo.cn/g?b=qq&nk=${values.username}&s=640`,
+          token:req.data.token
         }))
       }
     })
@@ -29,7 +30,7 @@ export default function Login () {
       <Space>
         <Breadcrumb>
           <Breadcrumb.Item>
-            <a href="/">Home</a>
+            <Link to="/">Home</Link>
           </Breadcrumb.Item>
           <Breadcrumb.Item>login</Breadcrumb.Item>
         </Breadcrumb>

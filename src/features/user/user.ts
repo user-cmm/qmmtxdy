@@ -19,11 +19,14 @@ export const userSlice = createSlice({
       state.token = token
       state.isLogin = isLogin
       state.avatar = avatar
+      localStorage.setItem("qmm_token",token)
+      localStorage.setItem("avatar",avatar)
     },
     logout(state) {
       state.token = ""
       state.avatar = ""
       state.isLogin = false
+      localStorage.removeItem("qmm_token")
     }
   }
 })

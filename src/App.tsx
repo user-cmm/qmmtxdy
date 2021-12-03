@@ -1,6 +1,6 @@
 import { Button, Col, Layout, Result, Row } from 'antd';
 import { Content, Header } from 'antd/lib/layout/layout';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Navigate, Route, Routes } from 'react-router';
 // import logo from './logo.svg';
 import Index from './page/Index/Index'
@@ -12,12 +12,30 @@ import { Link } from 'react-router-dom';
 import Nsfw from './page/NSFW/NSFW';
 import Login from './page/Login/login';
 import { useAppDispatch, useAppSelector } from './app/hooks';
-import { logout } from './features/user/user';
+import { logout, onLogin } from './features/user/user';
+import defaultAxios from './util/axios';
 const {Text} = Typography
 function App() {
   let info = useAppSelector((state)=>state.userSlice)
   let dis = useAppDispatch()
   const logo = "http://q1.qlogo.cn/g?b=qq&nk=1205906375&s=640"
+  useEffect(()=>{
+    let qmm_token = localStorage.getItem("qmm_token") || ""
+    if(qmm_token){
+      defaultAxios.post("/api/qmm/user/checkUser", {},{
+        headers:{
+          qmm_token
+        }
+      }).then(req=>{
+        console.log(req)
+        dis(onLogin({
+          isLogin:true,
+          token:req.data.token,
+          avatar:localStorage.getItem("avatar")||""
+        }))
+      })
+    }
+  },[])
   return (
     <Layout>
       <Header>
@@ -51,9 +69,11 @@ function App() {
       <Content>
         <Routes>
           <Route path="/" element={<Index />}></Route>
-          <Route path="/search" element={<Search />}></Route>
-          <Route path="/search/:pid" element={<Search />}></Route>
-          <Route path="/nsfw" element={<Nsfw/>}></Route>
+          {info.isLogin&&(<>
+            <Route path="/search" element={<Search />}></Route>
+            <Route path="/search/:pid" element={<Search />}></Route>
+            <Route path="/nsfw" element={<Nsfw/>}></Route>
+          </>)}
           <Route path="/login" element={info.isLogin?(
             <Navigate to="/"></Navigate>
           ):<Login/>}></Route>
